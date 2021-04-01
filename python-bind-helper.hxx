@@ -38,6 +38,19 @@
 
 namespace python_bind_helper {
 
+template<typename T>
+struct _ufunc_extract_signature;
+
+template<typename R, typename A0, typename A1, typename A2, typename A3>
+struct _ufunc_extract_signature<R(*)(A0,A1,A2,A3)> {
+	using ARG0 = A0;
+	using ARG1 = A1;
+	using ARG2 = A2;
+	using ARG3 = A3;
+};
+
+using _ufunc_types = _ufunc_extract_signature<PyUFuncGenericFunction>;
+
 template<typename ... ARGS>
 void fold(ARGS && ... args) { }
 
@@ -185,7 +198,7 @@ class build_ufunc<O_ARGS(I_ARGS...), FUNC>
 	template<std::size_t ... ISEQ>
 	struct _final<index_sequence<ISEQ...>>
 	{
-		static void call(char **args, npy_intp *dimensions, npy_intp *steps, void *extra)
+		static void call(_ufunc_types::ARG0 args, _ufunc_types::ARG1 dimensions, _ufunc_types::ARG2 steps, _ufunc_types::ARG3 extra)
 		{
 		    auto inputs  = std::make_tuple(data_handler<I_ARGS>{args[ISEQ], steps[ISEQ]}...);
 		    auto outputs = data_handler<O_ARGS>{args[ISIZE], steps[ISIZE]};
@@ -196,7 +209,7 @@ class build_ufunc<O_ARGS(I_ARGS...), FUNC>
 		}
 	};
 
-	static void ufunc(char **args, npy_intp *dimensions, npy_intp *steps, void *extra)
+	static void ufunc(_ufunc_types::ARG0 args, _ufunc_types::ARG1 dimensions, _ufunc_types::ARG2 steps, _ufunc_types::ARG3 extra)
 	{
 		_final<ISEQ_TYPE>::call(args, dimensions, steps, extra);
 	}
@@ -276,7 +289,7 @@ class build_ufunc<std::tuple<O_ARGS...>(I_ARGS...), FUNC>
 	template<std::size_t ... ISEQ, std::size_t ... OSEQ>
 	struct _final<index_sequence<ISEQ...>, index_sequence<OSEQ...>>
 	{
-		static void call(char **args, npy_intp *dimensions, npy_intp *steps, void *extra)
+		static void call(_ufunc_types::ARG0 args, _ufunc_types::ARG1 dimensions, _ufunc_types::ARG2 steps, _ufunc_types::ARG3 extra)
 		{
 		    auto inputs  = std::make_tuple(data_handler<I_ARGS>{args[ISEQ], steps[ISEQ]}...);
 		    auto outputs = std::make_tuple(data_handler<O_ARGS>{args[ISIZE+OSEQ], steps[ISIZE+OSEQ]}...);
@@ -287,7 +300,7 @@ class build_ufunc<std::tuple<O_ARGS...>(I_ARGS...), FUNC>
 		}
 	};
 
-	static void ufunc(char **args, npy_intp *dimensions, npy_intp *steps, void *extra)
+	static void ufunc(_ufunc_types::ARG0 args, _ufunc_types::ARG1 dimensions, _ufunc_types::ARG2 steps, _ufunc_types::ARG3 extra)
 	{
 		_final<ISEQ_TYPE, OSEQ_TYPE>::call(args, dimensions, steps, extra);
 	}
