@@ -95,22 +95,6 @@ static std::string _python_str(PyObject *obj)
 template<typename>
 struct _python_bind_type_info;
 
-template<typename T>
-static PyObject * _int_format()
-{
-	switch(sizeof(T)) {
-	case 1:
-		return Py_BuildValue("s", "i1");
-	case 2:
-		return Py_BuildValue("s", "i2");
-	case 4:
-		return Py_BuildValue("s", "i4");
-	case 8:
-		return Py_BuildValue("s", "i8");
-
-	}
-}
-
 template<>
 struct _python_bind_type_info<double> {
 	enum : int { npy_type = NPY_DOUBLE };
@@ -133,7 +117,7 @@ template<>
 struct _python_bind_type_info<int> {
 	enum : int { npy_type = NPY_INT };
 	static PyObject * format() {
-		return _int_format<int>();
+		return Py_BuildValue("s", "i4");
 	}
 };
 
@@ -141,7 +125,7 @@ template<>
 struct _python_bind_type_info<char> {
 	enum : int { npy_type = NPY_INT8 };
 	static PyObject * format() {
-		return _int_format<char>();
+		return Py_BuildValue("s", "i1");
 	}
 };
 
