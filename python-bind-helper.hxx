@@ -161,6 +161,14 @@ struct _python_bind_type_info<uint32_t> {
 	}
 };
 
+template<>
+struct _python_bind_type_info<uint16_t> {
+	enum : int { npy_type = NPY_UINT16 };
+	static PyObject * format() {
+		return Py_BuildValue("s", "u2");
+	}
+};
+
 template<typename F, F &FUNC>
 struct build_ufunc;
 
