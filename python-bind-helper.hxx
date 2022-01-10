@@ -145,6 +145,14 @@ struct _python_bind_type_info<char> {
 	}
 };
 
+template<>
+struct _python_bind_type_info<uint64_t> {
+	enum : int { npy_type = NPY_UINT64 };
+	static PyObject * format() {
+		return Py_BuildValue("s", "u8");
+	}
+};
+
 template<typename F, F &FUNC>
 struct build_ufunc;
 
