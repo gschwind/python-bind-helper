@@ -130,6 +130,14 @@ struct _python_bind_type_info<int> {
 };
 
 template<>
+struct _python_bind_type_info<int16_t> {
+	enum : int { npy_type = NPY_INT16 };
+	static PyObject * format() {
+		return Py_BuildValue("s", "i2");
+	}
+};
+
+template<>
 struct _python_bind_type_info<char> {
 	enum : int { npy_type = NPY_INT8 };
 	static PyObject * format() {
