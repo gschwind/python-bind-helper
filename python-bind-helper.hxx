@@ -253,7 +253,7 @@ class build_ufunc<O_ARGS(I_ARGS...), FUNC>
 
 public:
 	build_ufunc(std::string const & name, std::string const & doc = "") :
-		data{nullptr}, func{&ufunc}, name{name}, doc{doc}
+		func{&ufunc}, data{nullptr}, name{name}, doc{doc}
 	{
 		_update_types<ISEQ_TYPE>::update(types);
 	}
@@ -344,7 +344,7 @@ class build_ufunc<std::tuple<O_ARGS...>(I_ARGS...), FUNC>
 
 public:
 	build_ufunc(std::string const & name, std::string const & doc = "") :
-		data{nullptr}, func{&ufunc}, name{name}, doc{doc}
+		func{&ufunc}, data{nullptr}, name{name}, doc{doc}
 	{
 		_update_types<ISEQ_TYPE, OSEQ_TYPE>::update(types);
 	}
