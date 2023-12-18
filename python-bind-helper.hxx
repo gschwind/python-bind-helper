@@ -71,7 +71,7 @@ using make_index_sequence = typename _index_sequence<N>::type;
 
 
 // convenient function for debuging.
-static std::string _python_repr(PyObject *obj)
+inline std::string _python_repr(PyObject *obj)
 {
     PyObject* repr = PyObject_Repr(obj);
     PyObject* str = PyUnicode_AsEncodedString(repr, "utf-8", "strict");
@@ -82,7 +82,7 @@ static std::string _python_repr(PyObject *obj)
 }
 
 // convenient function for debuging.
-static std::string _python_str(PyObject *obj)
+inline std::string _python_str(PyObject *obj)
 {
     PyObject* repr = PyObject_Str(obj);
     PyObject* str = PyUnicode_AsEncodedString(repr, "utf-8", "strict");
